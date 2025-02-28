@@ -1,11 +1,15 @@
 let amigos = [];
 
 function adicionar() {
-    const nomeAmigo = document.getElementById('nome-amigo').value;
+    const nomeAmigo = document.getElementById('nome-amigo').value.trim();
     if (nomeAmigo) {
-        amigos.push(nomeAmigo);
-        document.getElementById('nome-amigo').value = '';
-        atualizarListaAmigos();
+        if (amigos.includes(nomeAmigo)) {
+            alert('Este nome já foi adicionado.');
+        } else {
+            amigos.push(nomeAmigo);
+            document.getElementById('nome-amigo').value = '';
+            atualizarListaAmigos();
+        }
     }
 }
 
@@ -15,24 +19,27 @@ function atualizarListaAmigos() {
 }
 
 function sortear() {
-    if (amigos.length < 2) {
-        alert('Adicione pelo menos dois amigos para sortear.');
+    if (amigos.length < 4) {
+        alert('Adicione pelo menos quatro amigos para sortear.');
         return;
     }
-    const sorteio = [];
-    const amigosTemp = [...amigos];
-    while (amigosTemp.length > 1) {
-        const indice1 = Math.floor(Math.random() * amigosTemp.length);
-        const amigo1 = amigosTemp.splice(indice1, 1)[0];
-        const indice2 = Math.floor(Math.random() * amigosTemp.length);
-        const amigo2 = amigosTemp.splice(indice2, 1)[0];
+
+    let sorteio = [];
+    let amigosTemp = [...amigos];
+
+    // Embaralha a lista para evitar padrões previsíveis
+    for (let i = amigosTemp.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [amigosTemp[i], amigosTemp[j]] = [amigosTemp[j], amigosTemp[i]];
+    }
+
+    // Criando uma ordem aleatória
+    for (let i = 0; i < amigosTemp.length; i++) {
+        let amigo1 = amigosTemp[i];
+        let amigo2 = amigosTemp[(i + 1) % amigosTemp.length];
         sorteio.push(`${amigo1} -> ${amigo2}`);
     }
-    if (amigosTemp.length === 1) {
-        const ultimoAmigo = amigosTemp[0];
-        const primeiroAmigo = sorteio[0].split(' -> ')[0];
-        sorteio.push(`${ultimoAmigo} -> ${primeiroAmigo}`);
-    }
+
     document.getElementById('lista-sorteio').innerHTML = sorteio.join('<br>');
 }
 

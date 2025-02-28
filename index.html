@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch&family=Inter&display=swap" rel="stylesheet">
-  <link href="
-https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css
-" rel="stylesheet" />
-  <link href="
-https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css
-" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css" rel="stylesheet" />
   <title>Amigo Secreto 2025</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <main>
     <img class="page__image" src="./assets/imagem-presente.png" alt="Imagem de um presente">
     <div class="content">
       <div class="content__corner-rectangle"></div>
@@ -31,9 +25,9 @@ https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css
             </label>
             <input id="nome-amigo" class="form__input" type="text" placeholder="Nome do amigo">
             <div class="form__buttons">
-              <button onclick="adicionar()" type="button" class="button primary">Adicionar</button>
-              <button onclick="sortear()" type="button" class="button secondary">Sortear</button>
-              <a onclick="reiniciar()" href="#" class="form__link">Reiniciar</a>
+              <button type="button" class="button primary" onclick="adicionar()">Adicionar</button>
+              <button type="button" class="button secondary" onclick="sortear()">Sortear</button>
+              <a href="#" class="form__link" onclick="reiniciar()">Reiniciar</a>
             </div>
           </form>
         </section>
@@ -53,10 +47,62 @@ https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css
         </section>
       </div>
     </div>
-  </main>
-  <div class="background__detail">
+  </main> <!-- FECHANDO TAG MAIN -->
 
-    <script src="js/app.js"></script>
+  <div class="background__detail"></div>
+
+  <script>
+    let amigos = [];
+
+    function adicionar() {
+        const nomeAmigo = document.getElementById('nome-amigo').value.trim();
+        if (nomeAmigo) {
+            if (amigos.includes(nomeAmigo)) {
+                alert('Este nome já foi adicionado.');
+            } else {
+                amigos.push(nomeAmigo);
+                document.getElementById('nome-amigo').value = '';
+                atualizarListaAmigos();
+            }
+        }
+    }
+
+    function atualizarListaAmigos() {
+        const listaAmigos = document.getElementById('lista-amigos');
+        listaAmigos.innerHTML = amigos.join(', ');
+    }
+
+    function sortear() {
+        if (amigos.length < 4) {
+            alert('Adicione pelo menos quatro amigos para sortear.');
+            return;
+        }
+
+        let sorteio = [];
+        let amigosTemp = [...amigos];
+
+        // Embaralha a lista para evitar padrões previsíveis
+        for (let i = amigosTemp.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [amigosTemp[i], amigosTemp[j]] = [amigosTemp[j], amigosTemp[i]];
+        }
+
+        // Criando uma ordem aleatória
+        for (let i = 0; i < amigosTemp.length; i++) {
+            let amigo1 = amigosTemp[i];
+            let amigo2 = amigosTemp[(i + 1) % amigosTemp.length];
+            sorteio.push(`${amigo1} -> ${amigo2}`);
+        }
+
+        document.getElementById('lista-sorteio').innerHTML = sorteio.join('<br>');
+    }
+
+    function reiniciar() {
+        amigos = [];
+        document.getElementById('lista-amigos').innerHTML = '';
+        document.getElementById('lista-sorteio').innerHTML = '';
+    }
+  </script>
+
 </body>
-
 </html>
